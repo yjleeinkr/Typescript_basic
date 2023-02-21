@@ -1,4 +1,4 @@
-{
+namespace withoutOOP {
     type Coffee = {
         shots: number,
         hasMilk : boolean,
