@@ -24,11 +24,13 @@
 
   // unknown 💩
   // 타입이 없는 자바스크립트와 연동해서 쓰기 위해 있다. 되도록 안 쓰는게 좋다.
+  // 알 수 없는 타입이라 타입을 확신하지 못할 때 표기 (즉, 어떤 타입이든 들어간다)
   let notSure: unknown;
   notSure = 1;
   notSure = true;
 
   // any 💩
+  // 어떤 것이든 다 담을 수 있다! 어떤 것이든 다 허용해주겠다.
   let anything: any = 0;
   anything = "hello";
 

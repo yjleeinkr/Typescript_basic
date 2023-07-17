@@ -24,12 +24,27 @@
 
   // enum은 되도록 쓰지 않는게 좋다. 💩
   let day = Days.Friday;
-  day = 10; // 숫자 자동 할당 시 타입 보장이 되지 않는다.
+  // day = 10; // 숫자 자동 할당 시 타입 보장이 되지 않는다.
   // 요일은 0~6 || 1~7 까지 있으므로 위에서 10은 유효하지 않은 넘버이다)
+  // 5.0 부터 지원되기 맞지 않는 숫자 할당 시 에러 발생함
   console.log(day);
   // 따라서 보통 union type을 써주자
   type DaysOfWeek = "Monday" | "Tuesday" | "Wednesday";
   let dayOfWeek: DaysOfWeek = "Monday";
 
   // dayOfWeek = 'yj' 할 경우 에러
+
+  // 아래와 같은 경우 유용할 수도 있겠다.
+  // 이렇게 길고 복잡한 union 대신
+  type Errors =
+    | "error msg simple version"
+    | "error msg long version"
+    | "error msg detail version";
+
+  // enum을 객체처럼 써도 괜찮을 듯 싶다.
+  enum Errors2 {
+    Short = "error msg simple version",
+    Long = "error msg long version",
+    Detail = "error msg detail version",
+  }
 }
