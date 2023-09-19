@@ -47,4 +47,22 @@
     Long = "error msg long version",
     Detail = "error msg detail version",
   }
+  // Enum 썼을 시
+  enum Fruits {
+    AP = "apple",
+    OG = "orange",
+    CH = "cherry",
+  }
+  function printFruit(fruit: Fruits) {
+    console.log(fruit);
+  }
+  printFruit("apple"); // 에러남
+  printFruit(Fruits.AP);
+
+  // Union 썼을 시
+  type TFruits = "apple" | "orange" | "cherry";
+  function printTFruit(fruit: TFruits) {
+    console.log(fruit);
+  }
+  printTFruit("apple"); // 자동완성으로 TFruits 옵션들이 뜸
 }
