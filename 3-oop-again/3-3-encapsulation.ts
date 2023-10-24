@@ -1,4 +1,4 @@
-namespace withClass {
+namespace encapsulation {
   type Coffee = {
     shots: number;
     hasMilk: boolean;
@@ -46,4 +46,54 @@ namespace withClass {
   const maker = CoffeeMaker.makeMachine(-3) // 음수를 넣어도 0으로 들어가게 처리
   maker.fillCoffeeBeans(10) 
   console.log(maker)
+
+  class User {
+     firstName: string;
+     lastName: string;
+    // fullName: string; 💩
+    get fullName(): string {
+      return `${this.firstName} ${this.lastName}`
+    }
+    constructor(firstName: string, lastName: string) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      // this.fullName = `${firstName} ${lastName}` 💩
+    }
+  }
+
+  const user = new User('yj', 'lee')
+  console.log(user.fullName) // yj lee
+  user.firstName = 'hj' 
+  console.log(user)
+  console.log(user.fullName) // yj lee
+  // hj lee가 아니라 그대로 yj lee가 나온다! 왜냐하면 firstName을 바꿨어도 firstName만 바뀌고, contructor는 오브젝트가 만들어질 때 딱 한번 호출되는 생성자 함수여서 이미 인스턴스 생성 시 fullName이 지정되어버렸기 때문에 바뀌지 않는다.
+  // ✨ 이 때 getters를 사용해주면 된다!
+
+  class User2 {
+    // firstName: string;  
+    // lastName: string;
+    // contructor에서 firstName과 lastName에 접근제어자를 붙여주면 멤버 변수를 따로 명시하지 않아도 된다!
+    get fullName(): string {
+      return `${this.firstName} ${this.lastName}`
+    }
+    private internalAge = 4;
+    get age(): number{
+      return this.internalAge;
+    }
+    set age(num: number) {
+      if (num <= 0) throw new Error('어려지고싶나요? 안됩니다.')
+      this.internalAge = num;
+    }
+    constructor(private firstName: string, private lastName: string) {
+      // this.firstName = firstName;
+      // this.lastName = lastName;
+      // contructor에서 firstName과 lastName에 접근제어자를 붙여주면 멤버 변수에 일일이 할당해주지 않아도 된다!
+    }
+  }
+  const user2 = new User2('Jaeyong', 'Lee');
+  console.log(user2)
+  user2.age = 1; // 쓰기 전용 - 할당해줄 땐 setter가 발동
+  console.log(user2.age) // 읽기 전용 - 읽을 땐 getter가 발동
+  console.log(user2)
 }
+
