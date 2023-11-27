@@ -64,8 +64,17 @@ namespace composition {
       return this.extract(shots);
     }
   }
-  // 싸구려 우유 거품기 
-  class CheapMilkSteamer {
+
+  // ✨ 인터페이스를 통해 디커플링하기!
+  interface MilkFrother {
+    makeMilk(cup: CoffeeCup): CoffeeCup;
+  }
+
+  interface SugarProvider{
+    addSugar(cup: CoffeeCup): CoffeeCup;
+  }
+
+  class CheapMilkSteamer implements MilkFrother {
     private steamMilk(): void {
       // 복잡한 내부 과정...
       console.log('Steaming some milk...🥛🔥');
@@ -79,9 +88,36 @@ namespace composition {
     }
   }
 
-  class CandySugarMixer {
+  class FancyMilkSteamer implements MilkFrother {
+    private steamMilk(): void {
+      // 복잡한 내부 과정...
+      console.log('Fancy steaming some milk...🥛🔥🧈');
+    }
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
+      return {
+        ...cup,
+        hasMilk: true
+      }
+    }
+  }
+
+  class ColdMilkSteamer implements MilkFrother {
+    private steamMilk() {
+      console.log('Steaming some COLD milk...🥛🔥🧈');
+    }
+    makeMilk(cup: CoffeeCup): CoffeeCup {
+      this.steamMilk();
+      return {
+        ...cup,
+        hasMilk: true
+      }
+    }
+  }
+
+  class CandySugarMixer implements SugarProvider {
     private getSugar() {
-      console.log('Getting some sugar from jar 🍭');
+      console.log('Getting some sugar from candy 🍭');
       // 복잡한 내부 과정...
       return true;
     }
@@ -94,8 +130,21 @@ namespace composition {
     }
   }
 
+  class SugarMixer implements SugarProvider {
+    private getSugar() {
+      console.log('Getting some sugar from jar 🫙');
+      return true
+    }
+    addSugar(cup: CoffeeCup): CoffeeCup {
+      const sugar = this.getSugar();
+      return {
+        ...cup,
+        hasSugar: sugar
+      }
+    }
+  }
   class CaffeLatteMachine extends CoffeeMachine {
-    constructor(beans: number, public readonly serialNumber: string, private milkFrother: CheapMilkSteamer) {
+    constructor(beans: number, public readonly serialNumber: string, private milkFrother: MilkFrother) {
       super(beans);
     }
 
@@ -112,7 +161,7 @@ namespace composition {
   }
    
   class SweetCoffeeMaker extends CoffeeMachine {
-    constructor(beans: number, private sugar: CandySugarMixer) {
+    constructor(beans: number, private sugar: SugarProvider) {
       super(beans)
     };
     
@@ -126,8 +175,8 @@ namespace composition {
   class SweetCaffeLatteMachine extends CoffeeMachine {
     constructor(
       private beans: number,
-      private milk: CheapMilkSteamer,
-      private sugar: CandySugarMixer
+      private milk: MilkFrother,
+      private sugar: SugarProvider
     ) {
       super(beans); 
     }
@@ -139,12 +188,23 @@ namespace composition {
     }
   }
 
+  // Milk
   const cheapMilkMaker = new CheapMilkSteamer();
-  const candySugar = new CandySugarMixer()
+  const fancyMilkMaker = new FancyMilkSteamer();
+  const coldMilkMaker = new ColdMilkSteamer();
 
-  const sweetMachine = new SweetCoffeeMaker(12, candySugar);
+  // Sugar
+  const candySugar = new CandySugarMixer();
+  const sugar = new SugarMixer();
+
+  // 
+  const sweetCandyMachine = new SweetCoffeeMaker(12, candySugar);
+  const sweetMachine = new SweetCoffeeMaker(12, sugar);
+
   const latteMachine = new CaffeLatteMachine(12, 'SS', cheapMilkMaker);
-  const sweetLatteMachine = new SweetCaffeLatteMachine(12, cheapMilkMaker, candySugar)
+  const coldLatteMachine = new CaffeLatteMachine(12, 'SS', coldMilkMaker);
+  const fancyLatteMachine = new CaffeLatteMachine(12, 'SS', fancyMilkMaker);
+  const sweetLatteMachine = new SweetCaffeLatteMachine(12, cheapMilkMaker, candySugar);
   // 이렇게 될 경우, 오로지 해당 클래스에 해당하는 인스턴스만 넣을 수 있어서 매우 제한적이고 확장성이 떨어진다.
   // 클래스들끼리 의사소통이 발생하는 경우, 클래스 자체를 노출하는 것이 아니라 계약서를 통해서, 계약서에 의거해서 의사소통해야한다.
   // 계약서 == 인터페이스를 통해 클래스 간 상호작용을 하는 것이 더 좋다. - 디커플링의 원칙
