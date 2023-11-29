@@ -51,4 +51,26 @@ namespace constraints {
   const hcAfterPay = pay(hc);
   yjAfterPay.workFullTime();
   hcAfterPay.workPartTime();
+
+  const obj = {
+    name: 'yj',
+    age: 30,
+  }
+
+  const obj2 = {
+    pet: 'hoochu 🐈‍⬛',
+    age: 3,
+  }
+
+  // 타입이 보장되면서 객체와 키값을 넣어서 값을 가져오는 함수를 만들어보면?
+  // keyof obj : obj가 가지고 있는 키의 타입을 뜻한다.
+  function getValue<T, K extends keyof T>(object: T, key: K) : T[K] {
+    return object[key];
+  }
+
+  console.log(getValue(obj, 'name'))
+  console.log(getValue(obj, 'age'))
+  console.log(getValue(obj2, 'pet'))
+  console.log(getValue(obj2, 'age'))
+
 }
