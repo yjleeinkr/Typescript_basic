@@ -24,5 +24,5 @@
 ### 3. 디버깅
 
 - tsconfig > compilerOptions > `sourceMap`: `true`로 설정
-- 작성한 ts파일과 컴파일된 js파일을 연결해주는 `.smap` 형식의 파일을 생성해준다.
+- 작성한 ts파일과 컴파일된 js파일을 연결해주는 `.map` 형식의 파일을 생성해준다.
 - 해당 .map 파일은 브라우저 > 개발자 도구 > Source 탭에서 확인할 수 있다.
